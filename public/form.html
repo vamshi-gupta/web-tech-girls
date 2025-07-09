@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Web Tech Community for Girls</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="bg-purple-600 text-white">
+        <nav class="container mx-auto flex justify-between items-center py-4 px-6">
+            <h1 class="text-2xl font-bold">Web Tech Girls</h1>
+        </nav>
+    </header>
+    <section class="py-20">
+        <div class="container mx-auto max-w-lg bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="text-3xl font-bold text-purple-800 mb-6 text-center">Join Our Community</h2>
+            <form id="registrationForm" action="/api/submit" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <div>
+                    <label for="name" class="block text-gray-700">Name</label>
+                    <input type="text" id="name" name="name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600" required>
+                </div>
+                <div>
+                    <label for="mobile" class="block text-gray-700">Mobile Number</label>
+                    <input type="tel" id="mobile" name="mobile" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600" required>
+                </div>
+                <div>
+                    <label for="email" class="block text-gray-700">Email</label>
+                    <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600" required>
+                </div>
+                <div>
+                    <label for="college" class="block text-gray-700">College</label>
+                    <input type="text" id="college" name="college" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600" required>
+                </div>
+                <div>
+                    <label for="department" class="block text-gray-700">Department</label>
+                    <select id="department" name="department" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600" required>
+                        <option value="" disabled selected>Select Department</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Mechanical">Mechanical</option>
+                        <option value="Civil">Civil</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="screenshot" class="block text-gray-700">Upload Screenshot</label>
+                    <input type="file" id="screenshot" name="screenshot" accept="image/*" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                    <div id="preview" class="mt-4 hidden">
+                        <img id="imagePreview" class="max-w-full h-auto rounded-lg" alt="Screenshot Preview">
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="button" id="shareButton" class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600 flex items-center justify-center mx-auto">
+                        <i class="fab fa-whatsapp mr-2"></i> Share on WhatsApp
+                    </button>
+                    <p class="mt-2 text-gray-600">Shares: <span id="shareCount">0</span>/5</p>
+                    <input type="hidden" id="shareCountInput" name="shareCount" value="0">
+                </div>
+                <div class="text-center">
+                    <button type="submit" id="submitButton" class="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 disabled:bg-gray-400" disabled>Submit</button>
+                    <p id="submitMessage" class="mt-2 text-green-600 hidden">Form submitted successfully!</p>
+                </div>
+            </form>
+        </div>
+    </section>
+    <footer class="bg-purple-600 text-white py-6">
+        <div class="container mx-auto text-center">
+            <p>© 2025 Web Tech Community for Girls. All rights reserved.</p>
+            <div class="mt-4">
+                <a href="#" class="text-white mx-2 hover:underline">Privacy Policy</a>
+                <a href="#" class="text-white mx-2 hover:underline">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        const screenshotInput = document.getElementById('screenshot');
+        const preview = document.getElementById('preview');
+        const imagePreview = document.getElementById('imagePreview');
+        screenshotInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.classList.remove('hidden');
+                    imagePreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.classList.add('hidden');
+                imagePreview.src = '';
+            }
+        });
+        let shareCount = 0;
+        const shareButton = document.getElementById('shareButton');
+        const shareCountDisplay = document.getElementById('shareCount');
+        const shareCountInput = document.getElementById('shareCountInput');
+        const submitButton = document.getElementById('submitButton');
+        shareButton.addEventListener('click', function() {
+            if (shareCount < 5) {
+                shareCount++;
+                shareCountDisplay.textContent = shareCount;
+                shareCountInput.value = shareCount;
+                window.open('https://api.whatsapp.com/send?text=Join%20the%20Web%20Tech%20Community%20for%20Girls!%20https://your-vercel-app.vercel.app', '_blank');
+                if (shareCount === 5) {
+                    submitButton.disabled = false;
+                }
+            }
+        });
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            const name = document.getElementById('name').value;
+            const mobile = document.getElementById('mobile').value;
+            const email = document.getElementById('email').value;
+            const college = document.getElementById('college').value;
+            const department = document.getElementById('department').value;
+            const screenshot = document.getElementById('screenshot').files[0];
+            if (!name || !mobile || !email || !college || !department || !screenshot || shareCount < 5) {
+                event.preventDefault();
+                alert('Please fill all fields, upload a screenshot, and share 5 times.');
+            } else {
+                document.getElementById('submitMessage').classList.remove('hidden');
+            }
+        });
+        window.open('https://api.whatsapp.com/send?text=Join%20the%20Web%20Tech%20Community%20for%20Girls!%20https://web-tech-girls.vercel.app', '_blank');
+    </script>
+</body>
+</html>

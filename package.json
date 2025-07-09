@@ -1,0 +1,13 @@
+{
+  "name": "web-tech-girls",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node api/submit.js",
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "@supabase/supabase-js": "^2.45.4",
+    "express-fileupload": "^1.4.0"
+  }
+}
